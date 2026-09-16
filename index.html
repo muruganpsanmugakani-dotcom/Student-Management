@@ -1,264 +1,843 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Student Management System</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 30px;
+            padding: 0;
+            font-family: Arial, sans-serif;
         }
 
+        body {
+            background: #f4f7fb;
+            color: #333;
+        }
+
+        /* HEADER */
+        header {
+            background: #2563eb;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 25px;
+        }
+
+        header p {
+            font-size: 14px;
+        }
+
+        /* NAVIGATION */
+        nav {
+            background: white;
+            padding: 15px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        nav button {
+            border: none;
+            background: transparent;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 15px;
+            margin-right: 10px;
+            border-radius: 6px;
+        }
+
+        nav button:hover {
+            background: #e8efff;
+            color: #2563eb;
+        }
+
+        /* MAIN */
         .container {
             width: 90%;
-            margin: auto;
-            background-color: white;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        /* DASHBOARD CARDS */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .card {
+            background: white;
             padding: 25px;
             border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
 
-        h1 {
-            text-align: center;
-        }
-
-        .form {
-            display: grid;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        input {
-            padding: 10px;
+        .card h3 {
+            color: #666;
             font-size: 16px;
+            margin-bottom: 10px;
         }
 
-        button {
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-            background-color: #333;
-            color: white;
-            border-radius: 5px;
+        .card h2 {
+            color: #2563eb;
+            font-size: 30px;
         }
 
+        /* CONTENT BOX */
+        .box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            margin-top: 25px;
+        }
+
+        .box h2 {
+            margin-bottom: 20px;
+        }
+
+        /* SEARCH */
+        .search {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        /* TABLE */
         table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
+        th {
+            background: #2563eb;
+            color: white;
+            padding: 12px;
+            text-align: left;
         }
 
-        th {
-            background-color: #333;
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f5f8ff;
+        }
+
+        /* BUTTONS */
+        .edit-btn {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .add-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* FORM */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+            background: #1e293b;
             color: white;
         }
 
-        .edit {
-            background-color: #555;
-            margin-right: 5px;
-        }
+        /* MOBILE */
+        @media(max-width: 700px) {
 
-        .delete {
-            background-color: #777;
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            nav {
+                text-align: center;
+            }
+
+            table {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+<!-- HEADER -->
+<header>
 
-    <h1>Student Management System</h1>
-
-    <div class="form">
-
-        <input type="text" id="name" placeholder="Student Name">
-
-        <input type="text" id="rollNumber" placeholder="Roll Number">
-
-        <input type="text" id="department" placeholder="Department">
-
-        <input type="email" id="email" placeholder="Email">
-
-        <button onclick="addStudent()">Add Student</button>
-
+    <div>
+        <h1>🎓 Student Management System</h1>
+        <p>Simple Student Record Management</p>
     </div>
 
-    <h2>Student List</h2>
+    <div>
+        <p>Admin Panel</p>
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Roll Number</th>
-                <th>Department</th>
-                <th>Email</th>
-                <th>Action</th>
-            </tr>
-        </thead>
+</header>
 
-        <tbody id="studentTable">
-        </tbody>
-    </table>
+
+<!-- NAVIGATION -->
+<nav>
+
+    <button onclick="showSection('dashboard')">
+        🏠 Dashboard
+    </button>
+
+    <button onclick="showSection('students')">
+        👨‍🎓 Students
+    </button>
+
+    <button onclick="showSection('addStudent')">
+        ➕ Add Student
+    </button>
+
+</nav>
+
+
+<div class="container">
+
+
+    <!-- ================= DASHBOARD ================= -->
+
+    <section id="dashboard" class="section active">
+
+        <h2>Dashboard</h2>
+
+        <p style="margin-top:10px;">
+            Welcome to the Student Management System
+        </p>
+
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>Total Students</h3>
+                <h2 id="totalStudents">0</h2>
+            </div>
+
+            <div class="card">
+                <h3>Departments</h3>
+                <h2 id="totalDepartments">0</h2>
+            </div>
+
+            <div class="card">
+                <h3>System Status</h3>
+                <h2>Active</h2>
+            </div>
+
+        </div>
+
+
+        <div class="box">
+
+            <h2>Student Management System</h2>
+
+            <p>
+                This system is used to add, view, edit and delete
+                student information.
+            </p>
+
+            <br>
+
+            <button class="add-btn"
+                    onclick="showSection('addStudent')">
+
+                + Add New Student
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= STUDENTS ================= -->
+
+    <section id="students" class="section">
+
+        <h2>Student Records</h2>
+
+
+        <div class="box">
+
+            <input
+                type="text"
+                id="searchInput"
+                class="search"
+                placeholder="🔍 Search student..."
+                onkeyup="searchStudent()"
+            >
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Name</th>
+
+                        <th>Roll Number</th>
+
+                        <th>Department</th>
+
+                        <th>Email</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="studentTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= ADD STUDENT ================= -->
+
+    <section id="addStudent" class="section">
+
+        <h2 id="formTitle">Add Student</h2>
+
+
+        <div class="box">
+
+            <form onsubmit="saveStudent(event)">
+
+                <div class="form-group">
+
+                    <label>Student Name</label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter student name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Roll Number</label>
+
+                    <input
+                        type="text"
+                        id="roll"
+                        placeholder="Enter roll number"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Department</label>
+
+                    <select id="department" required>
+
+                        <option value="">
+                            Select Department
+                        </option>
+
+                        <option>CSE</option>
+
+                        <option>CSE (AIML)</option>
+
+                        <option>ECE</option>
+
+                        <option>EEE</option>
+
+                        <option>MECH</option>
+
+                        <option>CIVIL</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Email</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter email"
+                        required
+                    >
+
+                </div>
+
+
+                <button class="add-btn" type="submit">
+
+                    Save Student
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="delete-btn"
+                    onclick="clearForm()"
+                    style="margin-left:10px;">
+
+                    Clear
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
 
 </div>
 
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        Student Management System © 2026
+    </p>
+
+</footer>
+
+
+
 <script>
 
-let students = JSON.parse(localStorage.getItem("students")) || [];
+    /* ===============================
+       STUDENT DATA
+    =============================== */
 
-let editIndex = -1;
+    let students =
+        JSON.parse(localStorage.getItem("students")) || [];
+
+    let editIndex = -1;
 
 
-// CREATE
-function addStudent() {
 
-    let name = document.getElementById("name").value;
-    let rollNumber = document.getElementById("rollNumber").value;
-    let department = document.getElementById("department").value;
-    let email = document.getElementById("email").value;
+    /* ===============================
+       SHOW SECTION
+    =============================== */
 
-    if (name === "" || rollNumber === "" ||
-        department === "" || email === "") {
+    function showSection(sectionId) {
 
-        alert("Please fill all fields");
-        return;
+        let sections =
+            document.querySelectorAll(".section");
+
+        sections.forEach(section => {
+
+            section.classList.remove("active");
+
+        });
+
+
+        document
+            .getElementById(sectionId)
+            .classList.add("active");
+
+
+        if(sectionId === "students") {
+
+            displayStudents();
+
+        }
+
     }
 
-    let student = {
-        name: name,
-        rollNumber: rollNumber,
-        department: department,
-        email: email
-    };
-
-    if (editIndex === -1) {
-
-        students.push(student);
-
-        alert("Student added successfully!");
-
-    } else {
-
-        students[editIndex] = student;
-
-        editIndex = -1;
-
-        alert("Student updated successfully!");
-    }
-
-    localStorage.setItem("students", JSON.stringify(students));
-
-    clearForm();
-
-    displayStudents();
-}
 
 
-// READ
-function displayStudents() {
+    /* ===============================
+       SAVE STUDENT
+    =============================== */
 
-    let table = document.getElementById("studentTable");
+    function saveStudent(event) {
 
-    table.innerHTML = "";
-
-    students.forEach(function(student, index) {
-
-        let row = `
-            <tr>
-
-                <td>${index + 1}</td>
-
-                <td>${student.name}</td>
-
-                <td>${student.rollNumber}</td>
-
-                <td>${student.department}</td>
-
-                <td>${student.email}</td>
-
-                <td>
-
-                    <button class="edit"
-                        onclick="editStudent(${index})">
-                        Edit
-                    </button>
-
-                    <button class="delete"
-                        onclick="deleteStudent(${index})">
-                        Delete
-                    </button>
-
-                </td>
-
-            </tr>
-        `;
-
-        table.innerHTML += row;
-    });
-}
+        event.preventDefault();
 
 
-// UPDATE
-function editStudent(index) {
+        let name =
+            document.getElementById("name").value;
 
-    document.getElementById("name").value =
-        students[index].name;
+        let roll =
+            document.getElementById("roll").value;
 
-    document.getElementById("rollNumber").value =
-        students[index].rollNumber;
+        let department =
+            document.getElementById("department").value;
 
-    document.getElementById("department").value =
-        students[index].department;
-
-    document.getElementById("email").value =
-        students[index].email;
-
-    editIndex = index;
-}
+        let email =
+            document.getElementById("email").value;
 
 
-// DELETE
-function deleteStudent(index) {
+        let student = {
 
-    if (confirm("Are you sure you want to delete this student?")) {
+            name: name,
 
-        students.splice(index, 1);
+            roll: roll,
+
+            department: department,
+
+            email: email
+
+        };
+
+
+        if(editIndex === -1) {
+
+            students.push(student);
+
+            alert("Student added successfully!");
+
+        }
+
+        else {
+
+            students[editIndex] = student;
+
+            alert("Student updated successfully!");
+
+            editIndex = -1;
+
+        }
+
 
         localStorage.setItem(
             "students",
             JSON.stringify(students)
         );
 
+
+        clearForm();
+
         displayStudents();
 
-        alert("Student deleted successfully!");
+        updateDashboard();
+
+        showSection("students");
+
     }
-}
 
 
-// CLEAR FORM
-function clearForm() {
 
-    document.getElementById("name").value = "";
+    /* ===============================
+       DISPLAY STUDENTS
+    =============================== */
 
-    document.getElementById("rollNumber").value = "";
+    function displayStudents() {
 
-    document.getElementById("department").value = "";
-
-    document.getElementById("email").value = "";
-}
+        let table =
+            document.getElementById("studentTable");
 
 
-// DISPLAY DATA WHEN PAGE OPENS
-displayStudents();
+        table.innerHTML = "";
+
+
+        students.forEach((student, index) => {
+
+            let row = `
+
+                <tr>
+
+                    <td>${index + 1}</td>
+
+                    <td>${student.name}</td>
+
+                    <td>${student.roll}</td>
+
+                    <td>${student.department}</td>
+
+                    <td>${student.email}</td>
+
+                    <td>
+
+                        <button
+                            class="edit-btn"
+                            onclick="editStudent(${index})">
+
+                            Edit
+
+                        </button>
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteStudent(${index})">
+
+                            Delete
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+
+            table.innerHTML += row;
+
+        });
+
+    }
+
+
+
+    /* ===============================
+       EDIT STUDENT
+    =============================== */
+
+    function editStudent(index) {
+
+        let student = students[index];
+
+
+        document.getElementById("name").value =
+            student.name;
+
+        document.getElementById("roll").value =
+            student.roll;
+
+        document.getElementById("department").value =
+            student.department;
+
+        document.getElementById("email").value =
+            student.email;
+
+
+        editIndex = index;
+
+
+        document.getElementById("formTitle").innerText =
+            "Edit Student";
+
+
+        showSection("addStudent");
+
+    }
+
+
+
+    /* ===============================
+       DELETE STUDENT
+    =============================== */
+
+    function deleteStudent(index) {
+
+        let confirmDelete =
+            confirm("Are you sure you want to delete this student?");
+
+
+        if(confirmDelete) {
+
+            students.splice(index, 1);
+
+
+            localStorage.setItem(
+                "students",
+                JSON.stringify(students)
+            );
+
+
+            displayStudents();
+
+            updateDashboard();
+
+            alert("Student deleted successfully!");
+
+        }
+
+    }
+
+
+
+    /* ===============================
+       SEARCH STUDENT
+    =============================== */
+
+    function searchStudent() {
+
+        let search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        let rows =
+            document.querySelectorAll("#studentTable tr");
+
+
+        rows.forEach(row => {
+
+            let text =
+                row.innerText.toLowerCase();
+
+
+            if(text.includes(search)) {
+
+                row.style.display = "";
+
+            }
+
+            else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+
+    /* ===============================
+       CLEAR FORM
+    =============================== */
+
+    function clearForm() {
+
+        document.getElementById("name").value = "";
+
+        document.getElementById("roll").value = "";
+
+        document.getElementById("department").value = "";
+
+        document.getElementById("email").value = "";
+
+        editIndex = -1;
+
+        document.getElementById("formTitle").innerText =
+            "Add Student";
+
+    }
+
+
+
+    /* ===============================
+       UPDATE DASHBOARD
+    =============================== */
+
+    function updateDashboard() {
+
+        document.getElementById("totalStudents")
+            .innerText = students.length;
+
+
+        let departments = new Set();
+
+
+        students.forEach(student => {
+
+            departments.add(student.department);
+
+        });
+
+
+        document.getElementById("totalDepartments")
+            .innerText = departments.size;
+
+    }
+
+
+
+    /* ===============================
+       PAGE LOAD
+    =============================== */
+
+    displayStudents();
+
+    updateDashboard();
 
 </script>
 
