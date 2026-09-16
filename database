@@ -1,0 +1,17 @@
+CREATE DATABASE student_management;
+
+CREATE TABLE students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    roll_number TEXT NOT NULL UNIQUE,
+    department TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE
+);
+
+INSERT INTO students (name, roll_number, department, email)
+VALUES
+('Arun', '101', 'CSE', 'arun@gmail.com'),
+('Priya', '102', 'CSE (AIML)', 'priya@gmail.com'),
+('Kaviya', '103', 'ECE', 'kaviya@gmail.com');
+
+SELECT * FROM students;
